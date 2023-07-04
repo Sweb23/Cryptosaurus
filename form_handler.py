@@ -9,6 +9,7 @@ import os
 import sys
 import json
 from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.backends import default_backend
 
 # Obtenir le chemin absolu du dossier contenant le module
 chemin_dossier_module = os.path.abspath(os.path.join(os.path.dirname(__file__), 'perm'))
@@ -132,12 +133,51 @@ class Form:
                             f.write("Your crypted message : \n")
                             f.write(str(msg_crypt))
                         
-                        Label(self.window,text="See file for results").grid(row=9,column=2)
+                            new_path_key = os.path.join(os.path.dirname(path_fichier),"private_key.pem")
+                            new_path_message = os.path.join(os.path.dirname(path_fichier),"crypted_message.bin")
+                            # Écrire la clé privée dans un fichier
+                            with open(new_path_key, "wb") as fichier_cle_privee:
+                                fichier_cle_privee.write(pr_key.private_bytes(
+                                    encoding=serialization.Encoding.PEM,
+                                    format=serialization.PrivateFormat.PKCS8,
+                                    encryption_algorithm=serialization.NoEncryption()
+                                ))
+                            with open(new_path_message,"wb") as fichier_msg:
+                                fichier_msg.write(msg_crypt)
+                            
+                        Label(self.window,
+                              text="See txt file for results.\nTo decrypt, give the files private_key and crypted_message to the reciever.").grid(row=9,
+                                                                                                                                                column=2)
 
                 except:
                     showwarning(title="Error", message="Something went wrong when computing the new message.")
-                
-                    
+#======================================================================
+#Decryptage RSA : Lecture des clés
+#======================================================================              
+            case "RSADECRYPT":
+                try:
+                    path_key = filedialog.askopenfilename(defaultextension=".pem",initialfile="private_key.pem",parent=self.window,
+                                                     title="Open private key file",
+                                                                filetypes=[("All files",""),("PEM files",".pem")])
+                    path_msg = filedialog.askopenfilename(defaultextension=".bin",initialfile="crypted_message.bin",parent=self.window,
+                                                     title="Open message file",
+                                                                filetypes=[("All files",""),("Binary files",".bin")])
+                    with open(path_key, "rb") as fichier_cle_privee:
+                        cle_privee = serialization.load_pem_private_key(
+                            fichier_cle_privee.read(),
+                            password=None,
+                            backend=default_backend()
+                        )
+                        with open(path_msg, "rb") as fichier_msg:
+                            msg_crypt = fichier_msg.read()
+                        
+                            msg = chiffrement_RSA.dechiffrer_RSA(msg_crypt,cle_privee)
+                        Label(self.window,text="Decrypted message : ").grid(row=10,column=2)
+                        text_box3 = Text(self.window, height=5, width=25, wrap="word")
+                        text_box3.insert(END, msg)
+                        text_box3.grid(row=11,column=2)
+                except:
+                    showwarning(title="Error", message="Something went wrong.")
             case other:
                 pass
             

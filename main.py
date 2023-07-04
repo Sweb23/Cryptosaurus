@@ -37,12 +37,17 @@ bouton_permu=Button(fenetre, text="Permutations", command=(lambda e = 11 : PermF
 RSACForm = form_handler.Form("RSACRYPT",fenetre,[form_handler.EntryProperties("Message","")])
 bouton_rsac=Button(fenetre,text="RSA (Crypt)", command=(lambda e = 21 : RSACForm.createForm(e)))
 
+RSADForm = form_handler.Form("RSADECRYPT",fenetre,[])
+#form_handler.EntryProperties("Message",""),form_handler.EntryProperties("Private key","")
+bouton_rsad = Button(fenetre,text="RSA (Decrypt)", command=(lambda e = 31 : RSADForm.createForm(e)))
+
 bouton_quitter=Button(fenetre, text="Close", command=quitter)
 
 bouton_cesar.grid(column=1,row=2)
 bouton_permu.grid(column=1,row=10)
 bouton_rsac.grid(column=1,row=20)
-bouton_quitter.grid(column=1,row=30)
+bouton_rsad.grid(column=1,row=30)
+bouton_quitter.grid(column=1,row=40)
 
 # Configurer le placement des widgets dans la fenêtre
 fenetre.update_idletasks()  # Mettre à jour la fenêtre pour calculer la taille
