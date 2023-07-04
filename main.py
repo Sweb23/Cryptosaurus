@@ -29,13 +29,16 @@ label = Label(fenetre, text="Cryptosaurus", bg="blue", fg="white", font=("Harlow
 label.grid(column=1,row=0)
 
 CesarForm = form_handler.Form("CAESAR",fenetre,[form_handler.EntryProperties("Message",""),form_handler.EntryProperties("Offset","int")])
-# bouton de sortie
 bouton_cesar=Button(fenetre, text="Caesar cipher", command=(lambda e = 3 : CesarForm.createForm(e)))
+
+PermForm = form_handler.Form("PERMUTATE",fenetre,[form_handler.EntryProperties("Message",""),form_handler.EntryProperties("Generate random permutation ? (y/n)","YesNo")])
+bouton_permu=Button(fenetre, text="Permutations", command=(lambda e = 11 : PermForm.createForm(e)))
 
 bouton_quitter=Button(fenetre, text="Close", command=quitter)
 
 bouton_cesar.grid(column=1,row=2)
-bouton_quitter.grid(column=1,row=20)
+bouton_permu.grid(column=1,row=10)
+bouton_quitter.grid(column=1,row=30)
 
 # Configurer le placement des widgets dans la fenêtre
 fenetre.update_idletasks()  # Mettre à jour la fenêtre pour calculer la taille
