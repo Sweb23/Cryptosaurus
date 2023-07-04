@@ -34,10 +34,14 @@ bouton_cesar=Button(fenetre, text="Caesar cipher", command=(lambda e = 3 : Cesar
 PermForm = form_handler.Form("PERMUTATE",fenetre,[form_handler.EntryProperties("Message",""),form_handler.EntryProperties("Generate random permutation ? (y/n)","YesNo")])
 bouton_permu=Button(fenetre, text="Permutations", command=(lambda e = 11 : PermForm.createForm(e)))
 
+RSACForm = form_handler.Form("RSACRYPT",fenetre,[form_handler.EntryProperties("Message","")])
+bouton_rsac=Button(fenetre,text="RSA (Crypt)", command=(lambda e = 21 : RSACForm.createForm(e)))
+
 bouton_quitter=Button(fenetre, text="Close", command=quitter)
 
 bouton_cesar.grid(column=1,row=2)
 bouton_permu.grid(column=1,row=10)
+bouton_rsac.grid(column=1,row=20)
 bouton_quitter.grid(column=1,row=30)
 
 # Configurer le placement des widgets dans la fenêtre

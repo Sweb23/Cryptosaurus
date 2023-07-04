@@ -1,9 +1,14 @@
+# coding: utf-8
+
 from tkinter import *
+from tkinter import filedialog
 import chiffrement_cesar
+import chiffrement_RSA
 from tkinter.messagebox import showwarning
 import os
 import sys
 import json
+from cryptography.hazmat.primitives import serialization
 
 # Obtenir le chemin absolu du dossier contenant le module
 chemin_dossier_module = os.path.abspath(os.path.join(os.path.dirname(__file__), 'perm'))
@@ -13,7 +18,7 @@ sys.path.append(chemin_dossier_module)
 
 import chiffrement_permutation as chp
 
-CRYPT_TYPES = ("CAESAR","PERMUTATE","BIJECTION","RSA","SEQUENCE")
+CRYPT_TYPES = ("CAESAR","PERMUTATE","BIJECTION","RSACRYPT","RSADECRYPT","SEQUENCE")
 
 def is_number(s):
     try:
@@ -68,7 +73,6 @@ class Form:
                 try:
                     msg_crypt = chiffrement_cesar.chiffrement(values[0],int(values[1]))
                     Label(self.window,text="Your crypted message : ").grid(row=6,column=2)
-                    #Entry(self.window,state="readonly",textvariable=StringVar(value=msg_crypt)).grid(row=7,column=2)
                     text_box = Text(self.window, height=5, width=25, wrap="word")
                     text_box.insert(END, msg_crypt)
                     text_box.grid(row=7,column=2)
@@ -101,6 +105,39 @@ class Form:
                     text_box3.grid(row=9,column=2)
                 except:
                     showwarning(title="Error", message="Something went wrong when computing the new message.")
+            
+#======================================================================
+#Cryptage RSA : génération de clés et sauvegarde ds un fichier
+#======================================================================
+            case "RSACRYPT":
+                try:
+                    pu_key,pr_key = chiffrement_RSA.generer_cles_RSA()
+                    msg_crypt = chiffrement_RSA.chiffrer_RSA(values[0],pu_key)
+                    
+
+                    path_fichier = filedialog.asksaveasfilename(defaultextension=".txt",initialfile="RSA_Result",parent=self.window,
+                                                     title="Save keys and message",
+                                                                filetypes=[("All files",""),("Text files",".txt")])
+                    if path_fichier != "":
+                        with open(path_fichier,mode="w",encoding='utf-8') as f:
+                            f.write("Public key : \n")
+                            f.write(pu_key.public_bytes(encoding=serialization.Encoding.PEM,
+                                                        format=serialization.PublicFormat.SubjectPublicKeyInfo).decode('utf-8'))
+                            f.write("\n \n")
+                            f.write("Private key : \n")
+                            f.write(pr_key.private_bytes(encoding=serialization.Encoding.PEM,
+                                                         format=serialization.PrivateFormat.PKCS8,
+                                                         encryption_algorithm=serialization.NoEncryption()).decode('utf-8'))
+                            f.write("\n \n")
+                            f.write("Your crypted message : \n")
+                            f.write(str(msg_crypt))
+                        
+                        Label(self.window,text="See file for results").grid(row=9,column=2)
+
+                except:
+                    showwarning(title="Error", message="Something went wrong when computing the new message.")
+                
+                    
             case other:
                 pass
             
