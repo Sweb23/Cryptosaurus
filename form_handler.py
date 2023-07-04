@@ -152,7 +152,7 @@ class Form:
                 except:
                     showwarning(title="Error", message="Something went wrong when computing the new message.")
 #======================================================================
-#Decryptage RSA : Lecture des clés
+#Decryptage RSA : Lecture de la clé privée et du message
 #======================================================================              
             case "RSADECRYPT":
                 try:

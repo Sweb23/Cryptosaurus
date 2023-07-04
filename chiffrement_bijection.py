@@ -59,36 +59,36 @@ def is_number(s):
     except ValueError:
         return False
 
+def launch():
+    C = chiffrement_bijection(B,lin_coefs(0.21,-0.89))
 
-C = chiffrement_bijection(B,lin_coefs(0.21,-0.89))
+    D = dechiffrement_bijection(C,lir_coefs(0.21,-0.89))
 
-D = dechiffrement_bijection(C,lir_coefs(0.21,-0.89))
+    msg = input("Entrez le message à chiffrer : ")
+    msg_cry = ""
+    let_cry = 0
 
-msg = input("Entrez le message à chiffrer : ")
-msg_cry = ""
-let_cry = 0
+    for lettre in msg:
+        if lettre.isalpha():
+            let_cry = C[A.index(lettre.upper())]
+            msg_cry+= str(let_cry) + " & "
+        else:
+            msg_cry += lettre + " & "
 
-for lettre in msg:
-    if lettre.isalpha():
-        let_cry = C[A.index(lettre.upper())]
-        msg_cry+= str(let_cry) + " & "
-    else:
-        msg_cry += lettre + " & "
+    print("Message crypté : ")
+    print(msg_cry)
+    print("\n")
 
-print("Message crypté : ")
-print(msg_cry)
-print("\n")
+    msg_dec = msg_cry.split(" & ")
+    msg_fin = ""
+    el_decr = 0
+    for el in msg_dec:
+        if is_number(el):
+            el_decr = D[C.index(float(el))]
+            msg_fin += A[int(el_decr)]
+        else:
+            msg_fin += el
 
-msg_dec = msg_cry.split(" & ")
-msg_fin = ""
-el_decr = 0
-for el in msg_dec:
-    if is_number(el):
-        el_decr = D[C.index(float(el))]
-        msg_fin += A[int(el_decr)]
-    else:
-        msg_fin += el
-
-print("Message décrypté : ")
-print(msg_fin)
-print("\n")
+    print("Message décrypté : ")
+    print(msg_fin)
+    print("\n")
