@@ -127,10 +127,14 @@ class Form:
                                     raise Exception("Integer list required")
                         C = cb.chiffrement_bijection(M,cb.z_to_n)
                     elif values[1] == "n":
-                        print("OK")
+                        #print("OK")
                         C = cb.chiffrement_bijection(cb.B,cb.z_to_n)
-                        print("OKK")
-                        
+                        #print("OKK")
+                    path_fichier = filedialog.asksaveasfilename(defaultextension=".json",initialfile="mapped_alphabet",parent=self.window,
+                                                     title="Save mapped alphabet",
+                                                                filetypes=[("All files",""),("Javascript object notation (JSON)",".json")])
+                    with open(path_fichier,'w') as f:
+                        f.write(json.dumps(C))
                     msg_cry = ""
                     let_cry = 0
                     
@@ -141,12 +145,51 @@ class Form:
                         else:
                             msg_cry += lettre + " & "
                     
+                    Label(self.window,text="To decrypt, send the message and mapped alphabet to reciever").grid(row=4,column=2)
+                    
                     Label(self.window,text="Result : ").grid(row=5,column=2)
                     text_box2 = Text(self.window, height=5, width=25, wrap="word")
                     text_box2.insert(END, msg_cry)
                     text_box2.grid(row=6,column=2)
                 except:
                     showwarning(title="Error", message="Something went wrong when computing the new message.")
+            case "NTOZ":
+                try:
+                    path_alpha = filedialog.askopenfilename(defaultextension=".json",initialfile="custom_alphabet.json",parent=self.window,
+                                                     title="Open custom alphabet file",
+                                                                filetypes=[("All files",""),("Javascript object notation (JSON)",".json")])
+                    with open(path_alpha,'r') as f:
+                        print("OKK")
+                        C = json.load(f)
+                        
+                        for l in C:
+                            if l != int(l):
+                                raise Exception("Integer list required")
+
+                    
+                    D = cb.dechiffrement_bijection(C,cb.n_to_z)
+                    print("OK")
+
+                    msg_dec = values[0].split(" & ")
+                    
+                    
+                    msg_fin = ""
+                    el_decr = 0
+                    for el in msg_dec:
+                        if cb.is_number(el):
+                            
+                            el_decr = D[C.index(float(el))]
+                            msg_fin += cb.A[int(el_decr)]
+                        else:
+                            msg_fin += el
+                    
+                    Label(self.window,text="Result : ").grid(row=5,column=2)
+                    text_box2 = Text(self.window, height=5, width=25, wrap="word")
+                    text_box2.insert(END, msg_fin)
+                    text_box2.grid(row=6,column=2)
+                except:
+                    showwarning(title="Error", message="Something went wrong when computing the new message.")
+                    
 #======================================================================
 #Cryptage RSA : génération de clés et sauvegarde ds un fichier
 #======================================================================

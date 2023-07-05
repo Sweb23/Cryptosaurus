@@ -11,6 +11,7 @@ sys.path.append(chemin_dossier_module)
 globalTopLevel = None
 import form_handler as fh
 ZtonForm = fh.Form("ZTON",globalTopLevel,[fh.EntryProperties("Message",""),fh.EntryProperties("Use custom alphabet ? (y/n)","YesNo")])
+NtozForm = fh.Form("NTOZ",globalTopLevel,[fh.EntryProperties("Crypted_Message","")])
 
 def create_img(path):
     # Chargez l'image à partir du dossier "img"
@@ -27,19 +28,19 @@ def bij_display(toplevel):
     globalTopLevel = toplevel
     print(os.getcwd())
     
-    emptyspace = Label(toplevel, text= "Choose a function")
+    emptyspace = Label(toplevel, text= "Crypt")
     emptyspace.grid(column=0,row=0,padx=100,pady=40)
     im1 = create_img("bij/img/fleches.png")
     Label(toplevel, image=im1).grid(column=1,row=0)
     
-    emptyspace = Label(toplevel, text= " ")
+    emptyspace = Label(toplevel, text= "Decrypt")
     emptyspace.grid(column=2,row=0,padx=100,pady=40)
     
     im2 = create_img("bij/img/fun1.png")
     Button(toplevel, image=im2, command=(lambda e = ZtonForm : toplevelForm(e))).grid(column=0,row=1)
 
     im3 = create_img("bij/img/fun2.png")
-    Button(toplevel, image=im3, command=None).grid(column=2,row=1)
+    Button(toplevel, image=im3, command=(lambda e = NtozForm : toplevelForm(e))).grid(column=2,row=1)
     
     im4 = create_img("bij/img/exp.png")
     Button(toplevel, image=im4, command=None).grid(column=0,row=2)
