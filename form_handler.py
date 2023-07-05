@@ -19,7 +19,15 @@ sys.path.append(chemin_dossier_module)
 
 import chiffrement_permutation as chp
 
-CRYPT_TYPES = ("CAESAR","PERMUTATE","BIJECTION","RSACRYPT","RSADECRYPT","SEQUENCE")
+# Obtenir le chemin absolu du dossier contenant le module
+chemin_dossier_module = os.path.abspath(os.path.join(os.path.dirname(__file__), 'bij'))
+
+# Ajouter le chemin du dossier à sys.path
+sys.path.append(chemin_dossier_module)
+
+import chiffrement_bijection as cb
+
+CRYPT_TYPES = ("CAESAR","PERMUTATE","BIJECTION","RSACRYPT","RSADECRYPT","ZTON","SEQUENCE")
 
 def is_number(s):
     try:
@@ -49,6 +57,7 @@ class Form:
         values = []
         for e in self.entries:
             val = e.textVar.get()
+            #print(val)
             try:
                 match e.cond:
                     case "":
@@ -62,11 +71,12 @@ class Form:
                         if val == "y" or val == "n":
                             values += [val]
                         else:
-                            raise Exception("y/n answer required")
+                            raise Exception("y/n answer required")                            
                     case other:
                         pass
+                #print(values[len(values) - 1])
             except:
-                showwarning(title="Error", message="Something went wrong. Please double check your input.")
+                showwarning(title="Error", message="Something went wrong when processing your form.")
                 
 
         match self.crypt:
@@ -104,9 +114,39 @@ class Form:
                     text_box3 = Text(self.window, height=5, width=25, wrap="word")
                     text_box3.insert(END, msg_crypt)
                     text_box3.grid(row=9,column=2)
+                    
                 except:
                     showwarning(title="Error", message="Something went wrong when computing the new message.")
-            
+            case "ZTON":
+                try:
+                    if values[1] == "y":
+                        with open('bij/custom_alphabet.json','r') as alpha:
+                            M = json.load(alpha)
+                            for l in M:
+                                if l != int(l):
+                                    raise Exception("Integer list required")
+                        C = cb.chiffrement_bijection(M,cb.z_to_n)
+                    elif values[1] == "n":
+                        print("OK")
+                        C = cb.chiffrement_bijection(cb.B,cb.z_to_n)
+                        print("OKK")
+                        
+                    msg_cry = ""
+                    let_cry = 0
+                    
+                    for lettre in values[0]:
+                        if lettre.isalpha():
+                            let_cry = C[cb.A.index(lettre.upper())]
+                            msg_cry+= str(let_cry) + " & "
+                        else:
+                            msg_cry += lettre + " & "
+                    
+                    Label(self.window,text="Result : ").grid(row=5,column=2)
+                    text_box2 = Text(self.window, height=5, width=25, wrap="word")
+                    text_box2.insert(END, msg_cry)
+                    text_box2.grid(row=6,column=2)
+                except:
+                    showwarning(title="Error", message="Something went wrong when computing the new message.")
 #======================================================================
 #Cryptage RSA : génération de clés et sauvegarde ds un fichier
 #======================================================================

@@ -2,31 +2,29 @@ import numpy as np
 
 A = [chr(i) for i in range(ord('A'),ord('Z') + 1)]
 
-B = [i for i in range(27)]
+B = [i for i in range(26)]
 
-def map(L,fun):
+def custom_map(L,fun):
     return [fun(L[i]) for i in range(len(L))]
 
 def chiffrement_bijection(alphabet = B,bijection = lambda x : x ):
-    return map(alphabet,bijection)
+    return custom_map(alphabet,bijection)
 
 def dechiffrement_bijection(alpha_chiffre,recip):
-    alpha_dechiffre = map(alpha_chiffre,recip)
-    return map(alpha_dechiffre,np.round)
+    alpha_dechiffre = custom_map(alpha_chiffre,recip)
+    return custom_map(alpha_dechiffre,np.round)
 
 def z_to_n(k):
     if k >= 0:
         return 2*k
     else:
         return -(2*k + 1)
-    return "ERR"
 
 def n_to_z(l):
     if l % 2 == 0 :
         return l/2
     else:
         return (-l - 1)/2
-    return "ERR"
 
 def exp_coefs(a,b,c,d):
     return lambda x : (a*np.exp(b*x+c) + d)
@@ -60,9 +58,9 @@ def is_number(s):
         return False
 
 def launch():
-    C = chiffrement_bijection(B,lin_coefs(0.21,-0.89))
+    C = chiffrement_bijection(B,z_to_n)
 
-    D = dechiffrement_bijection(C,lir_coefs(0.21,-0.89))
+    D = dechiffrement_bijection(C,n_to_z)
 
     msg = input("Entrez le message à chiffrer : ")
     msg_cry = ""

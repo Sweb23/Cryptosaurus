@@ -4,19 +4,32 @@ from tkinter import *
 from tkinter.messagebox import showwarning,askokcancel
 from PIL import ImageTk, Image
 import form_handler
+import os, sys
+
+# Obtenir le chemin absolu du dossier contenant le module
+chemin_dossier_module = os.path.abspath(os.path.join(os.path.dirname(__file__), 'bij'))
+
+# Ajouter le chemin du dossier à sys.path
+sys.path.append(chemin_dossier_module)
+
+import bij_handler as bh
 
 fenetre = Tk()
 contenu = Frame(fenetre)
 
 
 img = Image.open("dino.png")
-img.resize((100,60))
 img = ImageTk.PhotoImage(img)
 
 # Fonction appelée lorsque le bouton "Quitter" est cliqué
 def quitter():
     if askokcancel("Confirmation", "Are you sure you want to quit?"):
         fenetre.destroy()
+
+def open_bij():
+    bij_window = Toplevel(fenetre)
+    bh.bij_display(bij_window)
+
 
 contenu.grid(column=0, row=0,columnspan=3,rowspan=8)
 emptyspace = Label(fenetre, text= " ")
@@ -41,13 +54,16 @@ RSADForm = form_handler.Form("RSADECRYPT",fenetre,[])
 #form_handler.EntryProperties("Message",""),form_handler.EntryProperties("Private key","")
 bouton_rsad = Button(fenetre,text="RSA (Decrypt)", command=(lambda e = 31 : RSADForm.createForm(e)))
 
+bouton_bij = Button(fenetre,text="Bijection",command=open_bij)
+
 bouton_quitter=Button(fenetre, text="Close", command=quitter)
 
 bouton_cesar.grid(column=1,row=2)
 bouton_permu.grid(column=1,row=10)
 bouton_rsac.grid(column=1,row=20)
 bouton_rsad.grid(column=1,row=30)
-bouton_quitter.grid(column=1,row=40)
+bouton_bij.grid(column=1,row=40)
+bouton_quitter.grid(column=1,row=50)
 
 # Configurer le placement des widgets dans la fenêtre
 fenetre.update_idletasks()  # Mettre à jour la fenêtre pour calculer la taille
