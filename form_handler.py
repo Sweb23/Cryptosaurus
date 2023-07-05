@@ -36,6 +36,9 @@ def is_number(s):
     except ValueError:
         return False
 
+        
+
+
 class EntryProperties:
     textVar = ""
     
@@ -52,6 +55,80 @@ class Form:
         self.disp = disp
         self.window = window
         
+    def script_bijection_crypt(self,values,bij):
+        try:
+            if values[1] == "y":
+                with open('bij/custom_alphabet.json','r') as alpha:
+                    M = json.load(alpha)
+                    for l in M:
+                        if l != int(l):
+                            raise Exception("Integer list required")
+                C = cb.chiffrement_bijection(M,bij(*values[2:]))
+            elif values[1] == "n":
+                print("OK")
+                C = cb.chiffrement_bijection(cb.B,bij(*values[2:]))
+                print("OKK")
+            path_fichier = filedialog.asksaveasfilename(defaultextension=".json",initialfile="mapped_alphabet",parent=self.window,
+                                             title="Save mapped alphabet",
+                                                        filetypes=[("All files",""),("Javascript object notation (JSON)",".json")])
+            with open(path_fichier,'w') as f:
+                f.write(json.dumps(C))
+            msg_cry = ""
+            let_cry = 0
+            
+            for lettre in values[0]:
+                if lettre.isalpha():
+                    let_cry = C[cb.A.index(lettre.upper())]
+                    msg_cry+= str(let_cry) + " & "
+                else:
+                    msg_cry += lettre + " & "
+            
+            Label(self.window,text="To decrypt, send the message and mapped alphabet to reciever").grid(row=4,column=2)
+            
+            Label(self.window,text="Result : ").grid(row=5,column=2)
+            text_box2 = Text(self.window, height=5, width=25, wrap="word")
+            text_box2.insert(END, msg_cry)
+            text_box2.grid(row=6,column=2)
+        except:
+            showwarning(title="Error", message="Something went wrong when computing the new message.")
+
+    def script_bijection_decrypt(self,values,bij):
+        try:
+            path_alpha = filedialog.askopenfilename(defaultextension=".json",initialfile="custom_alphabet.json",parent=self.window,
+                                             title="Open custom alphabet file",
+                                                        filetypes=[("All files",""),("Javascript object notation (JSON)",".json")])
+            with open(path_alpha,'r') as f:
+                print("OKK")
+                C = json.load(f)
+                
+                for l in C:
+                    if l != int(l):
+                        raise Exception("Integer list required")
+
+            
+            D = cb.dechiffrement_bijection(C,bij(*values[2:]))
+            print("OK")
+
+            msg_dec = values[0].split(" & ")
+            
+            
+            msg_fin = ""
+            el_decr = 0
+            for el in msg_dec:
+                if cb.is_number(el):
+                    
+                    el_decr = D[C.index(float(el))]
+                    msg_fin += cb.A[int(el_decr)]
+                else:
+                    msg_fin += el
+            
+            Label(self.window,text="Result : ").grid(row=5,column=2)
+            text_box2 = Text(self.window, height=5, width=25, wrap="word")
+            text_box2.insert(END, msg_fin)
+            text_box2.grid(row=6,column=2)
+        except:
+            showwarning(title="Error", message="Something went wrong when computing the new message.")
+
         
     def checkValues(self):
         values = []
@@ -71,7 +148,17 @@ class Form:
                         if val == "y" or val == "n":
                             values += [val]
                         else:
-                            raise Exception("y/n answer required")                            
+                            raise Exception("y/n answer required")
+                    case "nonZero":
+                        if float(val) != 0:
+                            values += [val]
+                        else:
+                            raise Exception("Non zero float required")
+                    case "float":
+                        if float(val) == val:
+                            values += [val]
+                        else:
+                            raise Exception("Real number required")
                     case other:
                         pass
                 #print(values[len(values) - 1])
@@ -189,6 +276,8 @@ class Form:
                     text_box2.grid(row=6,column=2)
                 except:
                     showwarning(title="Error", message="Something went wrong when computing the new message.")
+            case "LIN":
+                self.script_bijection_crypt(values,cb.lin_coefs)
                     
 #======================================================================
 #Cryptage RSA : génération de clés et sauvegarde ds un fichier

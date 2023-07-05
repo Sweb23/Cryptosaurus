@@ -38,11 +38,14 @@ def lin_coefs(a,b):
 def lir_coefs(a,b):
     return lambda x: ((x -b)/a)
 
-def pui_coefs(a,y,b,c,d):
-    return lambda x : (a*y**(b*x+c) + d)
+def pui_coefs(y,a,b,c,d):
+    return lambda x : (a*pow(y,b*x+c) + d)
 
-def pur_coefs(a,y,b,c,d):
-    return lambda x : ((np.log((x - d)/a)/np.log(y) - c)/b)
+def log_y(y):
+    return lambda x : log(x)/log(y)
+
+def pur_coefs(y,a,b,c,d):
+    return lambda x : ((np.log_y(y)((x - d)/a) - c)/b)
 
 def fun_coefs(fun,a,b,c,d):
     return lambda x : (a*fun(b*x+c) + d)

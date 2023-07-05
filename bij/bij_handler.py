@@ -10,8 +10,12 @@ chemin_dossier_module = os.path.abspath(os.path.join(os.path.dirname(__file__), 
 sys.path.append(chemin_dossier_module)
 globalTopLevel = None
 import form_handler as fh
-ZtonForm = fh.Form("ZTON",globalTopLevel,[fh.EntryProperties("Message",""),fh.EntryProperties("Use custom alphabet ? (y/n)","YesNo")])
-NtozForm = fh.Form("NTOZ",globalTopLevel,[fh.EntryProperties("Crypted_Message","")])
+ZtonForm = fh.Form("ZTON",globalTopLevel,[fh.EntryProperties("Message",""),
+                                          fh.EntryProperties("Use custom alphabet ? (y/n)","YesNo")])
+NtozForm = fh.Form("NTOZ",globalTopLevel,[fh.EntryProperties("Crypted Message","")])
+LinForm = fh.Form("LIN",globalTopLevel,[fh.EntryProperties("Message",""),
+                                        fh.EntryProperties("Use custom alphabet ? (y/n)","YesNo"),
+                                        fh.EntryProperties("a","nonZero"),fh.EntryProperties("b","float")])
 
 def create_img(path):
     # Chargez l'image à partir du dossier "img"
@@ -49,7 +53,7 @@ def bij_display(toplevel):
     Button(toplevel, image=im5, command=None).grid(column=2,row=2)
     
     im6 =create_img("bij/img/lin.png")
-    Button(toplevel, image=im6, command=None).grid(column=0,row=3)
+    Button(toplevel, image=im6, command=(lambda e = LinForm : toplevelForm(e))).grid(column=0,row=3)
     
     im7 = create_img("bij/img/lir.png")
     Button(toplevel, image=im7, command=None).grid(column=2,row=3)
