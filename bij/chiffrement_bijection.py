@@ -42,10 +42,10 @@ def pui_coefs(y,a,b,c,d):
     return lambda x : (a*pow(y,b*x+c) + d)
 
 def log_y(y):
-    return lambda x : log(x)/log(y)
+    return lambda x : np.log(x)/np.log(y)
 
 def pur_coefs(y,a,b,c,d):
-    return lambda x : ((np.log_y(y)((x - d)/a) - c)/b)
+    return lambda x : ((log_y(y)((x - d)/a) - c)/b)
 
 def fun_coefs(fun,a,b,c,d):
     return lambda x : (a*fun(b*x+c) + d)
@@ -61,9 +61,9 @@ def is_number(s):
         return False
 
 def launch():
-    C = chiffrement_bijection(B,z_to_n)
+    C = chiffrement_bijection(B,lin_coefs(5,0))
 
-    D = dechiffrement_bijection(C,n_to_z)
+    D = dechiffrement_bijection(C,lir_coefs(5,0))
 
     msg = input("Entrez le message à chiffrer : ")
     msg_cry = ""

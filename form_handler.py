@@ -27,7 +27,7 @@ sys.path.append(chemin_dossier_module)
 
 import chiffrement_bijection as cb
 
-CRYPT_TYPES = ("CAESAR","PERMUTATE","BIJECTION","RSACRYPT","RSADECRYPT","ZTON","SEQUENCE")
+#CRYPT_TYPES = ("CAESAR","PERMUTATE","BIJECTION","RSACRYPT","RSADECRYPT","ZTON","SEQUENCE")
 
 def is_number(s):
     try:
@@ -63,9 +63,10 @@ class Form:
                     for l in M:
                         if l != int(l):
                             raise Exception("Integer list required")
+                print(values[2:])
                 C = cb.chiffrement_bijection(M,bij(*values[2:]))
             elif values[1] == "n":
-                print("OK")
+                #print("OK")
                 C = cb.chiffrement_bijection(cb.B,bij(*values[2:]))
                 print("OKK")
             path_fichier = filedialog.asksaveasfilename(defaultextension=".json",initialfile="mapped_alphabet",parent=self.window,
@@ -98,15 +99,15 @@ class Form:
                                              title="Open custom alphabet file",
                                                         filetypes=[("All files",""),("Javascript object notation (JSON)",".json")])
             with open(path_alpha,'r') as f:
-                print("OKK")
+                #print("OKK")
                 C = json.load(f)
-                
+                #print("OKKKK")
                 for l in C:
                     if l != int(l):
                         raise Exception("Integer list required")
 
             
-            D = cb.dechiffrement_bijection(C,bij(*values[2:]))
+            D = cb.dechiffrement_bijection(C,bij(*values[1:]))
             print("OK")
 
             msg_dec = values[0].split(" & ")
@@ -151,12 +152,14 @@ class Form:
                             raise Exception("y/n answer required")
                     case "nonZero":
                         if float(val) != 0:
-                            values += [val]
+                            
+                            values += [float(val)]
                         else:
                             raise Exception("Non zero float required")
                     case "float":
-                        if float(val) == val:
-                            values += [val]
+                        if is_number(val):
+                            
+                            values += [float(val)]
                         else:
                             raise Exception("Real number required")
                     case other:
@@ -278,6 +281,16 @@ class Form:
                     showwarning(title="Error", message="Something went wrong when computing the new message.")
             case "LIN":
                 self.script_bijection_crypt(values,cb.lin_coefs)
+            case "LIR":
+                self.script_bijection_decrypt(values,cb.lir_coefs)
+            case "EXP":
+                self.script_bijection_crypt(values,cb.exp_coefs)
+            case "LOG":
+                self.script_bijection_decrypt(values,cb.log_coefs)
+            case "PUI":
+                self.script_bijection_crypt(values,cb.pui_coefs)
+            case "PUR":
+                self.script_bijection_decrypt(values,cb.pur_coefs)
                     
 #======================================================================
 #Cryptage RSA : génération de clés et sauvegarde ds un fichier
