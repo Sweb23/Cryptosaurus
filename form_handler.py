@@ -4,6 +4,7 @@ from tkinter import *
 from tkinter import filedialog
 import chiffrement_cesar
 import chiffrement_RSA
+import chiffrement_suite
 from tkinter.messagebox import showwarning
 import os
 import sys
@@ -291,6 +292,29 @@ class Form:
                 self.script_bijection_crypt(values,cb.pui_coefs)
             case "PUR":
                 self.script_bijection_decrypt(values,cb.pur_coefs)
+            case "SEQUENCE":
+                (msg_cry,a,b,mu,la) = chiffrement_suite.crypt(chiffrement_suite.B,values[0])
+                Label(self.window,text="Result : ").grid(row=5,column=2)
+                text_box2 = Text(self.window, height=5, width=25, wrap="word")
+                text_box2.insert(END, msg_cry)
+                text_box2.grid(row=6,column=2)
+                
+                Label(self.window,
+                      text="To decrypt, give the crypted message and the following 4 values to the reciever : ").grid(row=7,column=2)
+                FormattedString = str.format("a = {}, b = {}, mu = {}, lambda = {}",a,b,mu,la)
+                text_box = Text(self.window,height=5, width=25, wrap="word")
+                text_box.insert(END,FormattedString)
+                text_box.grid(row=8,column=2)
+            case "SEQDECR":
+                if values[0][len(values[0] -1)] == "&":
+                    values[0] += " "
+                msg_decry = chiffrement_suite.decrypt(*values)
+                
+                Label(self.window,text="Result : ").grid(row=5,column=2)
+                text_box2 = Text(self.window, height=5, width=25, wrap="word")
+                text_box2.insert(END, msg_decry)
+                text_box2.grid(row=6,column=2)                
+                
                     
 #======================================================================
 #Cryptage RSA : génération de clés et sauvegarde ds un fichier

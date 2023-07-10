@@ -14,9 +14,9 @@ def is_number(s):
     
 A = [chr(i) for i in range(ord('A'),ord('Z') + 1)]
 
-B = [i for i in range(27)]
+B = [i for i in range(26)]
 
-def map(L,fun):
+def custom_map(L,fun):
     return [fun(L[i]) for i in range(len(L))]
 
 def suite():
