@@ -4,7 +4,7 @@
 
 You will need to have Python3 installed. To run the application, either run Cryptosaurus.exe, which is located in the source code folder, or launch the script through the command line (don't forget to be in the right directory) :
 
-''' python main.py '''
+` python main.py `
 
 Cryptosaurus is a simple Python application to encrypt and decrypt messages thanks to different methods. Want to tell everyone how much you hate your teacher without facing any consequences ? Want to send your crush a crypted love message *~(please don't do that it's creepy)~* ? Now you can! 
 
